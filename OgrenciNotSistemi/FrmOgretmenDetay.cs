@@ -66,42 +66,49 @@ namespace OgrenciNotSistemi
 
         private void btnGuncelle_Click(object sender, EventArgs e)
         {
-
-            double ortalama, s1, s2, s3;
-
-            string durum;
-            bool durumSonucu;
-
-            s1 = Convert.ToDouble(txtS1.Text);
-            s2 = Convert.ToDouble(txtS2.Text);
-            s3 = Convert.ToDouble(txtS3.Text);
-            ortalama = (s1 + s2 + s3) / 3;
-            lblOrtalama.Text = ortalama.ToString("00.00");
-
-            if (ortalama >= 50)
+            try
             {
-                lblDurum.Text = "GEÇTİ";
-                durumSonucu = true;
-            }
-            else
+                double ortalama, s1, s2, s3;
+
+                string durum;
+                bool durumSonucu;
+
+                s1 = Convert.ToDouble(txtS1.Text);
+                s2 = Convert.ToDouble(txtS2.Text);
+                s3 = Convert.ToDouble(txtS3.Text);
+                ortalama = (s1 + s2 + s3) / 3;
+                lblOrtalama.Text = ortalama.ToString("00.00");
+
+                if (ortalama >= 50)
+                {
+                    lblDurum.Text = "GEÇTİ";
+                    durumSonucu = true;
+                }
+                else
+                {
+                    lblDurum.Text = "KALDI";
+                    durumSonucu = false;
+                }
+
+
+                baglanti.Open();
+                SqlCommand komut = new SqlCommand("Update Tbl_Ders Set S1=@p1, S2=@p2, S3=@p3, ORTALAMA=@p5, DURUM=@p6 where OGRNUMARA=@p4", baglanti);
+                komut.Parameters.AddWithValue("@p1", txtS1.Text);
+                komut.Parameters.AddWithValue("@p2", txtS2.Text);
+                komut.Parameters.AddWithValue("@p3", txtS3.Text);
+                komut.Parameters.AddWithValue("@p4", mskNo.Text);
+                komut.Parameters.AddWithValue("@p5", decimal.Parse(lblOrtalama.Text));
+                komut.Parameters.AddWithValue("@p6", (durumSonucu));
+                komut.ExecuteNonQuery();
+                baglanti.Close();
+                MessageBox.Show("Öğrenci notları güncellendi.");
+                this.tbl_DersTableAdapter.Fill(this.dbNotKayitDataSet.Tbl_Ders);
+            }catch(Exception)
             {
-                lblDurum.Text = "KALDI";
-                durumSonucu = false;
+                MessageBox.Show("Lütfen geçerli değerler girdiğinizden emin olun.");
             }
 
-
-            baglanti.Open();
-            SqlCommand komut = new SqlCommand("Update Tbl_Ders Set S1=@p1, S2=@p2, S3=@p3, ORTALAMA=@p5, DURUM=@p6 where OGRNUMARA=@p4", baglanti);
-            komut.Parameters.AddWithValue("@p1", txtS1.Text);
-            komut.Parameters.AddWithValue("@p2", txtS2.Text);
-            komut.Parameters.AddWithValue("@p3", txtS3.Text);
-            komut.Parameters.AddWithValue("@p4", mskNo.Text);
-            komut.Parameters.AddWithValue("@p5", decimal.Parse(lblOrtalama.Text));
-            komut.Parameters.AddWithValue("@p6", (durumSonucu));
-            komut.ExecuteNonQuery();
-            baglanti.Close();
-            MessageBox.Show("Öğrenci notları güncellendi.");
-            this.tbl_DersTableAdapter.Fill(this.dbNotKayitDataSet.Tbl_Ders);
+            
 
         }
 
