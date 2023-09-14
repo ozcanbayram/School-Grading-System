@@ -32,7 +32,7 @@ namespace OgrenciNotSistemi
         private void btbKaydet_Click(object sender, EventArgs e) // All debugging is complated.
         {
             
-                baglanti.Open();
+                
                 SqlCommand komut = new SqlCommand("insert into Tbl_Ders (OGRNUMARA,OGRAD,OGRSOYAD) values (@p1,@p2,@p3)", baglanti);
                 komut.Parameters.AddWithValue("@p1", mskNo.Text);
                 komut.Parameters.AddWithValue("@p2", txtAd.Text);
